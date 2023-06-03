@@ -54,7 +54,7 @@ FinFuncion
 
 Funcion MostrarSoloLista(lista,index)
     costo = 0
-    Escribir "Producto      | Cantidad      | PrecioUnitario | Total"
+    Escribir "N°  | Producto      | Cantidad      | PrecioUnitario  | Total"
     Para _i = 1 Hasta index Hacer
         comas = 0
         indexPrimeraComa = 0
@@ -71,7 +71,7 @@ Funcion MostrarSoloLista(lista,index)
                     cantidad = ConvertirANumero(Subcadena(lista[_i], indexPrimeraComa + 1, __i - 1))
                     costo = costo + costoUnidad * cantidad
                     precio = costoUnidad * cantidad        
-                    Escribir producto,RellenarEspacios(producto,14),"| ", cantidad,RellenarEspacios(ConvertirATexto(cantidad),14),"| ", costoUnidad,RellenarEspacios(ConvertirATexto(costoUnidad),16),"| ",precio, RellenarEspacios(ConvertirATexto(precio),14)         
+                    Escribir _i, RellenarEspacios(ConvertirATexto(_i),4),"| ",producto,RellenarEspacios(producto,14),"| ", cantidad,RellenarEspacios(ConvertirATexto(cantidad),14),"| ", costoUnidad,RellenarEspacios(ConvertirATexto(costoUnidad),16),"| ",precio, RellenarEspacios(ConvertirATexto(precio),14)         
                 FinSi
             FinSi
         FinPara
