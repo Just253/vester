@@ -2,4 +2,4 @@
 Una simulacion de una IA con pseint
 
 ## Configuracion previa
-![Configuracion](Configuracion/Imagen.png?raw=true)
+![Screenshot](Configuracion/Imagen.png?raw=true)
