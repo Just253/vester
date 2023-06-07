@@ -10,7 +10,7 @@ Una simulacion de una IA con pseint para un proyecto de clases
 
 * Python
   1. Tener Python 3.9 o superior instalado
-  2. Abrir la carpeta Python
+  2. Abrir la carpeta Python_Codigo
   3. Ejecutar
       ```
       python Main.py
