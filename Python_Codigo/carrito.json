@@ -1,0 +1,29 @@
+{
+  "Productos":[
+    {
+        "nombreProducto": "Manzana",
+        "valorPorUnidad": 1.5,
+        "cantidadProducto": 8
+    },
+    {
+        "nombreProducto": "Pera",
+        "valorPorUnidad": 2,
+        "cantidadProducto": 8
+    },
+    {
+        "nombreProducto": "Banano",
+        "valorPorUnidad": 3,
+        "cantidadProducto": 6
+    },
+    {
+        "nombreProducto": "Mandarina",
+        "valorPorUnidad": 4,
+        "cantidadProducto": 5
+    },
+    {
+        "nombreProducto": "Apio",
+        "valorPorUnidad": 5,
+        "cantidadProducto": 10
+    }
+  ]
+}
