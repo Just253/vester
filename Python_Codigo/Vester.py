@@ -1,4 +1,5 @@
 import os, json, time 
+from os.path import exists
 
 pathArchivo = os.path.abspath(__file__)
 pathCarpeta = os.path.dirname(pathArchivo)
@@ -8,11 +9,12 @@ detener = False
 listaDelCarrito = [] # [{"nombreProducto": "Manzana","valorPorUnidad": 1.5,"cantidadProducto": 8}]
 
 def LoadSaveData():
+  file_exists = exists(nombreArchivosBD)
+  if not file_exists:
+    SaveData()
   file = open(nombreArchivosBD,"r")
   contenido = json.load(file)
-  print(contenido)
-  for item in contenido["Productos"]:
-    print(item)
+  for item in contenido:
     listaDelCarrito.append(item)
   file.close()
   return
@@ -43,13 +45,13 @@ def validarNumero(cadena):
 def MostrarSoloLista():
   #costo = 0
   print('Producto      | Cantidad      | PrecioUnitario | Total')
-  for productos in listaDelCarrito:
-    producto = productos.split(',')[0]
-    cantidad = productos.split(',')[1]
-    precioUnitario = productos.split(',')[2]
+  for producto in listaDelCarrito:
+    productoNombre = producto['nombreProducto']
+    cantidad = producto['cantidadProducto']
+    precioUnitario = producto['valorPorUnidad']
     precioTotal = str(float(cantidad) * float(precioUnitario))
 
-    formatoProducto = producto.ljust(13)
+    formatoProducto = productoNombre.ljust(13)
     formatoCantidad = cantidad.rjust(13)
     formatoPrecio = precioUnitario.rjust(14)
 
@@ -73,6 +75,7 @@ def AnadirProducto(nombre,cantidad,precioUnitario):
 
 def Comprar():
   LimpiarPantalla()
+  MostrarSoloLista()
   print('Vester > Ingrese el nombre del producto que desea agregar: (escriba menu para volver al menu principal)')
   nombre = input('Vester > Producto > ')
   nombre = nombre.upper()
@@ -90,7 +93,7 @@ def Comprar():
       print('Vester > Error: Precio Unitario no valido, ingresalo nuevamente: ')
       valorUnidad = input('Vester > Ingrese el precio unitario del producto:')
     AnadirProducto(nombre,cantidad,valorUnidad)
-    return
+  Comprar()
 def Salir():
   LimpiarPantalla()
   print('Vester > Que tengas un bonito dia.')
@@ -118,9 +121,6 @@ def Menu():
   
 def Main():
   LoadSaveData()
-  print(listaDelCarrito)
-  for producto in listaDelCarrito:
-    print(producto.get('cantidadProducto') , producto.get('nombreProducto') , producto.get('valorPorUnidad'))
   Menu()
 
 if __name__ == "__main__":
