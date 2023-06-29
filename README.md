@@ -28,9 +28,9 @@ Una idea de un administror de compra para el usuario comun en su vida diaria
     ```
 
 ## Por hacer:
-[ ] Arreglar el GUI
-[ ] Hacer pruebas en celulares
-[ ] Comentar el codigo
+- [ ] Arreglar el GUI
+- [ ] Hacer pruebas en celulares
+- [ ] Comentar el codigo
 
 
 
