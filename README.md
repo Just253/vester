@@ -1,5 +1,5 @@
 # Vester
-Una simulacion de una IA con pseint para un proyecto de clases
+Una idea de un administror de compra para el usuario comun en su vida diaria
 
 ## Como iniciar
 
@@ -9,18 +9,34 @@ Una simulacion de una IA con pseint para un proyecto de clases
   3. Ejecutar con F5
 
 * Python
-  1. Tener Python 3.9 o superior instalado
-  2. Abrir la carpeta Python_Codigo
-  3. Ejecutar
+  - Tener Python 3.9 o superior instalado
+  - Abrir la carpeta Python_Codigo
+  - 
       ```
+      #  Traduccion literal de pseint
       python Main.py
+      # Traduccion con mejoras realizadas
+      python Vester.py
+
+      # Probar la fase experimental de la GUI 
+      python GUI\newMain.py
       ```
+   + NOTA:
+    Instalar estos paquetes si no los tienes instalados
+    ```
+    pip install kivy kivyMD 
+    ```
 
 ## Por hacer:
-...
+[ ] Arreglar el GUI
+[ ] Hacer pruebas en celulares
+[ ] Comentar el codigo
+
 
 
 
 ### ChangeLog
 
+29/06/2023 - Subir la GUI a Github (contiene fallos)
+24/06/2023 - Inicio experimental de GUI
 07/06/2023 - Traducido a python
