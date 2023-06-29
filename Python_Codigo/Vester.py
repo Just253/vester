@@ -52,8 +52,8 @@ def MostrarSoloLista():
     precioTotal = str(float(cantidad) * float(precioUnitario))
 
     formatoProducto = productoNombre.ljust(13)
-    formatoCantidad = cantidad.rjust(13)
-    formatoPrecio = precioUnitario.rjust(14)
+    formatoCantidad = str(cantidad).rjust(13)
+    formatoPrecio = str(precioUnitario).rjust(14)
 
 
     #print(producto.ljust(14), '|', cantidad.rjust(4), '|', unidad.rjust(15), '|', precio.rjust(14))

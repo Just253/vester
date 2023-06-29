@@ -1,5 +1,4 @@
-{
-  "Productos":[
+[  
     {
         "nombreProducto": "Manzana",
         "valorPorUnidad": 1.5,
@@ -25,5 +24,4 @@
         "valorPorUnidad": 5,
         "cantidadProducto": 10
     }
-  ]
-}
+]
