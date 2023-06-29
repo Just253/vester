@@ -37,6 +37,8 @@ Una idea de un administror de compra para el usuario comun en su vida diaria
 
 ### ChangeLog
 
-29/06/2023 - Subir la GUI a Github (contiene fallos)
-24/06/2023 - Inicio experimental de GUI
-07/06/2023 - Traducido a python
+[29/06/2023] - Subir la GUI a Github (contiene fallos)
+
+[24/06/2023] - Inicio experimental de GUI
+
+[07/06/2023] - Traducido a python
