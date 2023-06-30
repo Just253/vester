@@ -9,19 +9,29 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.metrics import dp
+from kivy.uix.widget import Widget
+from kivy.uix.button import Button as button
 
 # KivyMD
-from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton, MDRoundFlatButton
+from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton, MDRoundFlatButton, MDTextButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.datatables import MDDataTable
 from kivymd.uix.label import MDLabel
-
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.floatlayout import MDFloatLayout
+from kivymd.uix.button import MDRaisedButton
 
 ##### BUTTONS AND BOX LAYOUTS ##########
 Button  = MDRectangleFlatButton
 Input  = MDTextField
+########################################
+##### VARIABLES #########################
+buttonsSize = (0.5,0.1)
+
+spaceSize = (0.05,0.05)
+
 ########################################
 
 
@@ -30,6 +40,9 @@ pathCarpeta = os.path.dirname(pathArchivo)
 nombreArchivosBD = pathCarpeta + "\carrito.json"
 
 listaDelCarrito = [] # [{"nombreProducto": "Manzana","valorPorUnidad": 1.5,"cantidadProducto": 8}]
+
+def spacer():
+    return Widget(size_hint=spaceSize)
 
 def validarNumero(cadena):
     try:
@@ -47,6 +60,7 @@ def AñadirProducto(nombre,cantidad,precioUnitario):
     guardar()
 
 def EliminarProducto(index):
+    print("index: " + str(index))
     del listaDelCarrito[index]
     guardar()
 
@@ -65,6 +79,9 @@ def cargar():
     for item in contenido:
         listaDelCarrito.append(item)
     file.close()
+
+def obtener_indice(numero):
+    return (numero - 4) // 5
 
 class VesterApp(MDApp):
     def build(self):
@@ -89,18 +106,22 @@ class Menu(Screen):
         self.add_widget(self.layout)
 
         titulo = Label(text="Vester", font_size=50, size_hint=(1, 0.2))
-        self.layout.add_widget(titulo)
-
-        comprar_btn = Button(text="Comprar", size_hint=(0.5, 0.2), pos_hint={"center_x": 0.5, "center_y": 0.6})
+        
+        comprar_btn = Button(text="Comprar", size_hint=buttonsSize, pos_hint={"center_x": 0.5, "center_y": 0.10})
         comprar_btn.bind(on_press=self.ir_a_comprar)
-        self.layout.add_widget(comprar_btn)
 
-        mostrar_btn = Button(text="Mostrar Lista", size_hint=(0.5, 0.2), pos_hint={"center_x": 0.5, "center_y": 0.4})
+        mostrar_btn = Button(text="Mostrar Lista", size_hint=buttonsSize, pos_hint={"center_x": 0.5, "center_y": 0.6})
         mostrar_btn.bind(on_press=self.ir_a_lista)
-        self.layout.add_widget(mostrar_btn)
 
-        salir_btn = Button(text="Salir", size_hint=(0.5, 0.2), pos_hint={"center_x": 0.5, "center_y": 0.2})
+        salir_btn = Button(text="Salir", size_hint=buttonsSize, pos_hint={"center_x": 0.5, "center_y": 0.2})
         salir_btn.bind(on_press=self.salir)
+        
+        
+        self.layout.add_widget(titulo)
+        self.layout.add_widget(comprar_btn)
+        self.layout.add_widget(spacer())
+        self.layout.add_widget(mostrar_btn)
+        self.layout.add_widget(spacer())
         self.layout.add_widget(salir_btn)
 
     def ir_a_comprar(self, instance):
@@ -116,12 +137,11 @@ class Menu(Screen):
 class Comprar(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.layout = BoxLayout(orientation="vertical", padding=50)
-        self.add_widget(self.layout)
+        self.layout = BoxLayout(orientation="vertical", padding=10)
 
         self.lista = Lista().devolver_SoloLista()
         
-        titulo = Label(text="Comprar", font_size=50, size_hint=(1, 1.1))
+        titulo = Label(text="Comprar", font_size=50, size_hint=(1, 1.1), size_hint_y=None, height=dp(50))
 
         self.producto = Input(hint_text="Nombre del producto", multiline=False)
         self.cantidad = Input(hint_text="Cantidad", multiline=False)
@@ -133,6 +153,8 @@ class Comprar(Screen):
 
         volver_btn = Button(text="Volver al menú principal", size_hint=(0.5, 0.2), pos_hint={"center_x": 0.5, "center_y": 0.2})
         volver_btn.bind(on_press=self.volver_al_menu)
+        
+        self.add_widget(self.layout)
 
         self.layout.add_widget(titulo)
         self.layout.add_widget(self.lista)
@@ -143,45 +165,66 @@ class Comprar(Screen):
         self.layout.add_widget(volver_btn)
 
     def añadir_al_carrito(self, instance):
-        nombre = self.nombre_input.text.upper()
-        cantidad = self.cantidad_input.text
-        precio = self.precio_input.text
+        nombre = self.producto.text
+        cantidad = self.cantidad.text
+        precio = self.precio.text
         if nombre and cantidad and precio and validarNumero(cantidad) and validarNumero(precio):
             AñadirProducto(nombre, cantidad, precio)
-            self.nombre_input.text = ''
-            self.cantidad_input.text = ''
-            self.precio_input.text = ''
+            self.producto.text = ''
+            self.cantidad.text = ''
+            self.precio.text = ''
             dialog = MDDialog(title="Producto añadido", text="El producto ha sido añadido al carrito.")
             dialog.open()
+            self.ActualizarLista()
         else:
             dialog = MDDialog(title="Error", text="Por favor ingrese valores válidos.")
             dialog.open()
 
     def volver_al_menu(self, instance):
         self.manager.current = 'menu'
+    def ActualizarLista(self):
+        self.layout.remove_widget(self.lista)
+        self.lista =  Lista().devolver_SoloLista()
+        self.layout.add_widget(self.lista,index=-1)
+
+        #Lista().devolver_SoloLista()
+        #self.layout.add_widget(self.lista,index=-1)
 
 class Lista(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.body = BoxLayout(orientation='vertical',padding=10)
         
-        titulo = MDLabel(text="Lista de productos", font_size=20, size_hint=(0.5, 0.5), pos_hint={"center_x": 0.5, "center_y": 0.5})
-        self.add_widget(titulo)
+        titulo = Label(text="Lista de productos", font_size=50, size_hint=(1, 1.1), size_hint_y=None, height=dp(50))
+        #self.add_widget(titulo)
         contentLista = self.TablaDeLaLista()
 
         volver_btn = Button(text="Volver al menú principal", size_hint=(0.5, 0.1), pos_hint={"center_x": 0.5, "center_y": 0.2})
         volver_btn.bind(on_press=self.volver_al_menu)
 
-        #body.add_widget(titulo)
+        self.body.add_widget(titulo)
         self.body.add_widget(contentLista)
         self.body.add_widget(volver_btn)
         self.add_widget(self.body)
       
 
     def TablaDeLaLista(self):
+
+        layout = MDFloatLayout()
+        
+        button_box = MDBoxLayout(
+            pos_hint={"center_x": 0.2, "center_y": 0.1},
+            adaptive_size=True,
+            #padding="24dp",
+            spacing="24dp",
+        )
+        button = MDRectangleFlatButton(text="Eliminar seleccion", on_press=self.eliminar_producto)
+
+
         self.table = MDDataTable(
-            size_hint=(1, 1.1),
+            #size_hint=(1, 1.1),
             use_pagination=True,
+            check=True,
             pagination_menu_height=dp(40),
             rows_num=len(listaDelCarrito),
             column_data=[
@@ -189,15 +232,42 @@ class Lista(Screen):
                 ("Cantidad", dp(30)),
                 ("Precio Unitario", dp(30)),
                 ("Total", dp(30)),
-                ("Eliminar", dp(30))
+                #("Eliminar", dp(30))
             ],
             row_data=self.get_row_data(),
-            pos_hint={'center_x': 0.5, 'center_y': 1.5}
+            pos_hint={'center_x': 0.5, 'center_y': 0.5}
         )
-        self.table.bind(on_row_press=self.eliminar_producto)
+        #self.table.bind(on_row_press=self.eliminar_producto)
+        #self.table.bind(on_row_press=self.on_row_press)
+        #self.eliminar = Button(text='Eliminar selecciones',pos_hint={'center_x': 0.1, 'center_y': 0.1})
+        #self.eliminar.bind(on_press=self.eliminar_producto)
+        
+        #self.table.add_widget(self.eliminar)
+        self.table.bind(on_check_press=self.on_check_press)
+        
+        button_box.add_widget(button)
+        layout.add_widget(self.table)
+        layout.add_widget(button_box)
+        return layout
+    
+    def on_check_press(self, instance_table, current_row):
+        '''Called when the check box in the table row is checked.'''
+        print(instance_table, current_row)
+        print(instance_table.get_row_checks())
+        self.checks = instance_table.get_row_checks()
+        print(self.checks)
+    
+    def DeleteRowFromTable(self, index):
+        for i, objeto in enumerate(listaDelCarrito):
+            if all(valor in objeto.values() for valor in index[0:-1]):
+                print(f"El objeto se encuentra en la posición {i}")
+                break
+        print("value of index: ", listaDelCarrito[i])
+        print("index: " + str(i))
+        del listaDelCarrito[i]
+        self.checks.remove(index)
         
 
-        return self.table
     def get_row_data(self):
         data = []
         for producto in listaDelCarrito:
@@ -205,21 +275,35 @@ class Lista(Screen):
             cantidad = producto['cantidadProducto']
             precioUnitario = producto['valorPorUnidad']
             precioTotal = str(float(cantidad) * float(precioUnitario))
-            eliminar_btn = Button(text="Eliminar", size_hint=(0.5, 0.2), pos_hint={"center_x": 0.5, "center_y": 0.5})
+            eliminar_btn = MDTextButton(text="Eliminar", size_hint=(0.5, 0.2), pos_hint={"center_x": 0.5, "center_y": 0.5})
             eliminar_btn.bind(on_press=self.eliminar_producto)
-            data.append((productoNombre, cantidad, precioUnitario, precioTotal, eliminar_btn))
+            data.append((productoNombre, cantidad, precioUnitario, precioTotal))
+        self.checks = []
         return data
 
-    def eliminar_producto(self, instance_table, instance_row):
-        index = instance_row.index
-        EliminarProducto(index)
-        self.table.rows_num = len(listaDelCarrito)
-        self.table.row_data = self.get_row_data()
+    def eliminar_producto(self, instance_button):
+        #index = obtener_indice(instance_row.index)
+        #EliminarProducto(index)
+        
+        if len(self.checks) == 0:
+            dialog = MDDialog(title="Error", text="Por favor seleccione al menos un producto")
+            dialog.open()
+        else:
+            print(self.checks)
+            for x in self.checks:
+                self.DeleteRowFromTable(x)
+            self.checks = []
+            self.actualizarTabla()
 
     def volver_al_menu(self, instance):
         self.manager.current = 'menu'
     
+    def actualizarTabla(self):
+        self.table.rows_num = len(listaDelCarrito)
+        self.table.row_data = self.get_row_data()
+
     def devolver_SoloLista(self):
+        self.actualizarTabla()
         return self.TablaDeLaLista()
 
 if __name__ == "__main__":
