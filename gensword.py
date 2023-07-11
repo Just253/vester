@@ -67,25 +67,25 @@ def verificar_contraseña(contra):
     sha1hash = hashlib.sha1(contra.encode('utf-8')).hexdigest().upper()
     hash_prefix, hash_suffix = sha1hash[:5], sha1hash[5:]
     url = f'https://api.pwnedpasswords.com/range/{hash_prefix}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        hashes = response.text.splitlines()
-        #print(hashes)
-        for h in hashes:
-            if hash_suffix in h:
-                puntaje -= 1
-                motivos += "La contraseña ha sido filtrada en una base de datos de contraseñas comprometidas.\n"
-                break
+    try:
+      response = requests.get(url, timeout=2)
+      if response.status_code == 200:
+          hashes = response.text.splitlines()
+          #print(hashes)
+          for h in hashes:
+              if hash_suffix in h:
+                  puntaje -= 1
+                  motivos += "La contraseña ha sido filtrada en una base de datos de contraseñas comprometidas.\n"
+                  break
+    except Exception:
+      motivos = "\nNo se pudo acceder a la base de datos"
+      print("error de conexion")
+
+    if puntaje <= 0:
+      puntaje = 0
     return puntaje, motivos
 
-passwords = [{
-  "password":"secreto123$",
-  "score":4,
-  "state":"Moderada",
-  "hash":"f4716f4adec1e7e50c3e732e31e641c0b58b94dc",
-  "time": "2021-07-31 01:23:00"
-}]
-
+passwords = []
 def LoadPasswords():
   import json
   file_exists = exists(nombreArchivosBD)
@@ -120,7 +120,7 @@ def getState(puntaje):
   return mensaje
 class JeremiasApp(MDApp):
   def build(self):
-    self.theme_cls.primary_palette = "Orange"
+    self.theme_cls.primary_palette = "Red"
     self.theme_cls.theme_style = "Dark"
 
     self.screen_manager = ScreenManager()
@@ -317,10 +317,10 @@ class VerificarContraseña(Screen):
     titulo = Label(text="Verificar seguridad de la contraseña", font_size=50, size_hint=(1, 1.1), size_hint_y=None, height=dp(50))
 
     self.contraseña = Input(hint_text="Ingrese la contraseña", multiline=False)
-    self.verificar_btn = Button(text="Verificar", size_hint=(0.5, 0.03), pos_hint={"center_x": 0.5, "center_y": 0.5})
+    self.verificar_btn = Button(text="Verificar", size_hint=(0.20, 0.03),font_size=25,  pos_hint={"center_x": 0.5, "center_y": 0.5})
     self.verificar_btn.bind(on_press=self.verificarContraseña)
 
-    self.regresar_btn = Button(text="Regresar", size_hint=(0.15, 0.03),pos_hint={"center_x": 0.5, "center_y": 0.1})
+    self.regresar_btn = Button(text="Regresar", size_hint=(0.15, 0.03),font_size=25, pos_hint={"center_x": 0.5, "center_y": 0.1})
     self.regresar_btn.bind(on_press=self.regresar)
 
     self.body.add_widget(titulo)
