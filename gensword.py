@@ -75,10 +75,10 @@ def verificar_contraseña(contra):
           for h in hashes:
               if hash_suffix in h:
                   puntaje -= 1
-                  motivos += "La contraseña ha sido filtrada en una base de datos de contraseñas comprometidas.\n"
+                  motivos += "\nLa contraseña ha sido filtrada en una base de datos de contraseñas comprometidas.\n"
                   break
     except Exception:
-      motivos = "\nNo se pudo acceder a la base de datos"
+      motivos += "\nNo se pudo acceder a la base de datos"
       print("error de conexion")
 
     if puntaje <= 0:
